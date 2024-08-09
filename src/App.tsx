@@ -1,5 +1,5 @@
 import { Dashboard } from "./components/ui/dashboard";
-import Draw from "./components/ui/tldraw";
+import Draw from "./tldraw/tldraw";
 
 function App() {
   return (

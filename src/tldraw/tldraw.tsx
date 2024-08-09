@@ -22,17 +22,24 @@ import {
   useRelevantStyles,
   useTools,
 } from "tldraw";
-import { MyShapeUtil } from "./UnitOp";
+import "@/tldraw/tldraw.css";
+import { UnitOpShapeTool, UnitOpUtl } from "./shapes/UnitOp";
+import { customAssetUrls, uiOverrides } from "./overrides";
 
 export default function Draw() {
-  const customShapes = [MyShapeUtil];
+  const customShapeUtils = [UnitOpUtl];
+  const customTools = [UnitOpShapeTool];
   return (
     <div style={{ position: "fixed", inset: 0 }}>
       <Tldraw
+        tools={customTools}
         components={components}
-        shapeUtils={customShapes}
+        shapeUtils={customShapeUtils}
+        overrides={uiOverrides}
+        assetUrls={customAssetUrls}
         onMount={(editor) => {
-          editor.createShape({ type: "my-custom-shape", x: 100, y: 100 });
+          editor.createShape({ type: "unit-op", x: 100, y: 100 });
+          editor.user.updateUserPreferences({ isSnapMode: true });
         }}
       />
     </div>
@@ -189,17 +196,29 @@ function CustomStylePanel(props: TLUiStylePanelProps) {
 function CustomToolbar() {
   const editor = useEditor();
   const tools = useTools();
-  const isScreenshotSelected = useIsToolSelected(tools["rhombus-2"]);
+
   return (
     <div>
       <DefaultToolbar>
         <TldrawUiMenuItem
-          {...tools["rhombus-2"]}
-          isSelected={isScreenshotSelected}
+          {...tools["select"]}
+          isSelected={useIsToolSelected(tools["select"])}
         />
         <TldrawUiMenuItem
-          {...tools["rectangle"]}
-          isSelected={isScreenshotSelected}
+          {...tools["hand"]}
+          isSelected={useIsToolSelected(tools["hand"])}
+        />
+        <TldrawUiMenuItem
+          {...tools["text"]}
+          isSelected={useIsToolSelected(tools["text"])}
+        />
+        <TldrawUiMenuItem
+          {...tools["arrow"]}
+          isSelected={useIsToolSelected(tools["arrow"])}
+        />
+        <TldrawUiMenuItem
+          {...tools["unitop"]}
+          isSelected={useIsToolSelected(tools["unitop"])}
         />
 
         {/* <DefaultToolbarContent /> */}
