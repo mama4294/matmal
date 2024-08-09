@@ -22,11 +22,19 @@ import {
   useRelevantStyles,
   useTools,
 } from "tldraw";
+import { MyShapeUtil } from "./UnitOp";
 
 export default function Draw() {
+  const customShapes = [MyShapeUtil];
   return (
     <div style={{ position: "fixed", inset: 0 }}>
-      <Tldraw components={components} />
+      <Tldraw
+        components={components}
+        shapeUtils={customShapes}
+        onMount={(editor) => {
+          editor.createShape({ type: "my-custom-shape", x: 100, y: 100 });
+        }}
+      />
     </div>
   );
 }
@@ -44,6 +52,25 @@ const components: TLComponents = {
   StylePanel: CustomStylePanel,
   Toolbar: CustomToolbar,
   // ZoomMenu: CustomZoomMenu,
+  //   ContextMenu: null,
+  //   ActionsMenu: null,
+  //   HelpMenu: null,
+  //   ZoomMenu: null,
+  //   MainMenu: null,
+  //   Minimap: null,
+  //   StylePanel: null,
+  //   PageMenu: null,
+  //   NavigationPanel: null,
+  //   Toolbar: null,
+  KeyboardShortcutsDialog: null,
+  //   QuickActions: null,
+  //   HelperButtons: null,
+  //   DebugPanel: null,  //bottom bar
+  //   DebugMenu: null, //bottom right
+  SharePanel: null,
+  //   MenuPanel: null, top left menu
+  //   TopPanel: null,
+  // CursorChatBubble: null,
 };
 
 function CustomContextMenu(props: TLUiContextMenuProps) {
