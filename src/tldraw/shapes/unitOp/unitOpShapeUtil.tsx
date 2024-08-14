@@ -9,9 +9,10 @@ import {
   T,
   TLBaseShape,
   TLOnResizeHandler,
+  useDefaultColorTheme,
 } from "tldraw";
 
-type ICustomShape = TLBaseShape<
+export type IUnitOpShape = TLBaseShape<
   "unit-op",
   {
     w: number;
@@ -20,29 +21,17 @@ type ICustomShape = TLBaseShape<
   }
 >;
 
-import { BaseBoxShapeTool, TLClickEvent } from "tldraw";
-export class UnitOpShapeTool extends BaseBoxShapeTool {
-  static override id = "unit-op";
-  static override initial = "idle";
-  override shapeType = "unit-op";
-
-  override onDoubleClick: TLClickEvent = (_info) => {
-    // you can handle events in handlers like this one;
-    // check the BaseBoxShapeTool source as an example
-  };
-}
-
-export class UnitOpUtl extends ShapeUtil<ICustomShape> {
+export class UnitOpUtl extends ShapeUtil<IUnitOpShape> {
   // [a]
   static override type = "unit-op" as const;
-  static override props: RecordProps<ICustomShape> = {
+  static override props: RecordProps<IUnitOpShape> = {
     w: T.number,
     h: T.number,
     text: T.string,
   };
 
   // [b]
-  getDefaultProps(): ICustomShape["props"] {
+  getDefaultProps(): IUnitOpShape["props"] {
     return {
       w: 200,
       h: 100,
@@ -56,7 +45,7 @@ export class UnitOpUtl extends ShapeUtil<ICustomShape> {
   override isAspectRatioLocked = () => false;
 
   // [d]
-  getGeometry(shape: ICustomShape): Geometry2d {
+  getGeometry(shape: IUnitOpShape): Geometry2d {
     return new Rectangle2d({
       width: shape.props.w,
       height: shape.props.h,
@@ -64,7 +53,7 @@ export class UnitOpUtl extends ShapeUtil<ICustomShape> {
     });
   }
 
-  override getBoundsSnapGeometry(shape: ICustomShape): BoundsSnapGeometry {
+  override getBoundsSnapGeometry(shape: IUnitOpShape): BoundsSnapGeometry {
     return new Rectangle2d({
       width: shape.props.h,
       height: shape.props.h,
@@ -78,19 +67,22 @@ export class UnitOpUtl extends ShapeUtil<ICustomShape> {
   };
 
   // [f]
-  component(shape: ICustomShape) {
+  component(shape: IUnitOpShape) {
+    const theme = useDefaultColorTheme();
+
     return (
       <HTMLContainer
         style={{
-          //   backgroundColor: "#efefef",
-          backgroundColor: "rgba(239, 239, 239, 1)",
+          // backgroundColor: "#010403",
+          borderColor: theme.white.solid,
+          backgroundColor: theme.solid,
           display: "flex",
           boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.2)",
           justifyContent: "center",
           position: "relative",
           alignItems: "center",
           textAlign: "justify",
-          border: "3px solid black",
+          border: "3px solid",
           borderRadius: "5px",
           fontWeight: "bold",
           padding: 8,
@@ -102,7 +94,7 @@ export class UnitOpUtl extends ShapeUtil<ICustomShape> {
   }
 
   // [g]
-  indicator(shape: ICustomShape) {
+  indicator(shape: IUnitOpShape) {
     //The indicator is the blue outline around a selected shape.
     return <rect width={shape.props.w} height={shape.props.h} />;
   }

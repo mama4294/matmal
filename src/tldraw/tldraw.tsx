@@ -4,39 +4,36 @@ import {
   DefaultContextMenu,
   DefaultContextMenuContent,
   DefaultMainMenu,
-  DefaultMainMenuContent,
-  DefaultPageMenu,
-  DefaultStylePanel,
   DefaultToolbar,
-  DefaultToolbarContent,
   TLComponents,
   Tldraw,
-  TldrawUiButton,
-  TldrawUiButtonLabel,
   TldrawUiMenuGroup,
   TldrawUiMenuItem,
   TLUiContextMenuProps,
   TLUiStylePanelProps,
   useEditor,
   useIsToolSelected,
-  useRelevantStyles,
   useTools,
 } from "tldraw";
 import "@/tldraw/tldraw.css";
-import { UnitOpShapeTool, UnitOpUtl } from "./shapes/UnitOp";
 import { customAssetUrls, uiOverrides } from "./overrides";
+import { UnitOpUtl } from "./shapes/unitOp/unitOpShapeUtil";
+import { UnitOpShapeTool } from "./shapes/unitOp/unitOpShapeTool";
+import { StreamShapeUtil } from "./shapes/stream/StreamShapeUtil";
+import { StreamShapeTool } from "./shapes/stream/StreamShapeTool";
 
 export default function Draw() {
-  const customShapeUtils = [UnitOpUtl];
-  const customTools = [UnitOpShapeTool];
+  const customShapeUtils = [UnitOpUtl, StreamShapeUtil];
+  const customTools = [UnitOpShapeTool, StreamShapeTool];
   return (
     <div style={{ position: "fixed", inset: 0 }}>
       <Tldraw
-        tools={customTools}
-        components={components}
+        //inferDarkMode
+        tools={customTools} //state for tools
+        components={components} //Which TLDRAW default UI components are displayed
         shapeUtils={customShapeUtils}
-        overrides={uiOverrides}
-        assetUrls={customAssetUrls}
+        overrides={uiOverrides} //menu buttons
+        assetUrls={customAssetUrls} //icons
         onMount={(editor) => {
           editor.createShape({ type: "unit-op", x: 100, y: 100 });
           editor.user.updateUserPreferences({ isSnapMode: true });
@@ -219,6 +216,10 @@ function CustomToolbar() {
         <TldrawUiMenuItem
           {...tools["unitop"]}
           isSelected={useIsToolSelected(tools["unitop"])}
+        />
+        <TldrawUiMenuItem
+          {...tools["stream"]}
+          isSelected={useIsToolSelected(tools["stream"])}
         />
 
         {/* <DefaultToolbarContent /> */}
