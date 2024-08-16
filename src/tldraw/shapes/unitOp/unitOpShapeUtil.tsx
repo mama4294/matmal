@@ -8,6 +8,7 @@ import {
   ShapeUtil,
   T,
   TLBaseShape,
+  TLOnDoubleClickHandler,
   TLOnResizeHandler,
   useDefaultColorTheme,
 } from "tldraw";
@@ -52,6 +53,11 @@ export class UnitOpUtl extends ShapeUtil<IUnitOpShape> {
       isFilled: true,
     });
   }
+
+  override onDoubleClick?: TLOnDoubleClickHandler<IUnitOpShape> | undefined =
+    () => {
+      console.log("Double clicked unitop");
+    };
 
   override getBoundsSnapGeometry(shape: IUnitOpShape): BoundsSnapGeometry {
     return new Rectangle2d({

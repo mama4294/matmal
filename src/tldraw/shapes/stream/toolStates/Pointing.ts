@@ -1,6 +1,7 @@
 import {
   Mat,
   StateNode,
+  TLClickEvent,
   TLLineShape,
   TLShapeId,
   Vec,
@@ -34,7 +35,7 @@ export class Pointing extends StateNode {
       //   this.markId = this.editor.markHistoryStoppingPoint(
       //     `creating_line:${shape.id}`
       //   );
-      this.shape = shape;
+      // this.shape = shape;
 
       const handles = this.editor.getShapeHandles(this.shape);
       if (!handles) return;
@@ -122,28 +123,31 @@ export class Pointing extends StateNode {
   override onPointerMove = () => {
     if (!this.shape) return;
 
-    if (this.editor.inputs.isDragging) {
-      const handles = this.editor.getShapeHandles(this.shape);
-      if (!handles) {
-        if (this.markId) this.editor.bailToMark(this.markId);
-        throw Error("No handles found");
-      }
-      //   const lastHandle = last(handles)!;
-      const lastHandle = handles[handles.length - 1];
-      this.editor.setCurrentTool("select.dragging_handle", {
-        shape: this.shape,
-        isCreating: true,
-        creatingMarkId: this.markId,
-        // remove the offset that we added to the handle when we created it
-        handle: { ...lastHandle, x: lastHandle.x - 0.1, y: lastHandle.y - 0.1 },
-        onInteractionEnd: "line",
-      });
+    const handles = this.editor.getShapeHandles(this.shape);
+    if (!handles) {
+      if (this.markId) this.editor.bailToMark(this.markId);
+      throw Error("No handles found");
     }
+    //   const lastHandle = last(handles)!;
+    const lastHandle = handles[handles.length - 1];
+    this.parent.transition("drawing_line", {
+      shape: this.shape,
+      isCreating: true,
+      creatingMarkId: this.markId,
+      // remove the offset that we added to the handle when we created it
+      handle: { ...lastHandle, x: lastHandle.x - 0.1, y: lastHandle.y - 0.1 },
+      onInteractionEnd: "line",
+    });
   };
 
-  override onPointerUp = () => {
+  override onDoubleClick?: TLClickEvent | undefined = () => {
+    console.log("Pointing: Double Click");
     this.complete();
   };
+
+  // override onPointerUp = () => {
+  //   this.complete();
+  // };
 
   override onCancel = () => {
     this.cancel();
@@ -159,14 +163,14 @@ export class Pointing extends StateNode {
     this.editor.snaps.clearIndicators();
   };
 
-  complete() {
-    this.parent.transition("idle", { shapeId: this.shape.id });
-    this.editor.snaps.clearIndicators();
-  }
-
   cancel() {
     if (this.markId) this.editor.bailToMark(this.markId);
     this.parent.transition("idle", { shapeId: this.shape.id });
     this.editor.snaps.clearIndicators();
+  }
+
+  private complete() {
+    this.editor.snaps.clearIndicators();
+    this.editor.setCurrentTool("select");
   }
 }

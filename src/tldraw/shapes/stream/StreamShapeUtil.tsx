@@ -41,7 +41,7 @@ export const STROKE_SIZES: Record<string, number> = {
   xl: 10,
 };
 
-type ICustomShape = TLBaseShape<
+export type StreamShape = TLBaseShape<
   "line",
   {
     dash: string;
@@ -53,7 +53,7 @@ type ICustomShape = TLBaseShape<
   }
 >;
 
-export class StreamShapeUtil extends ShapeUtil<ICustomShape> {
+export class StreamShapeUtil extends ShapeUtil<StreamShape> {
   static override type = "steam" as const;
   static override props = lineShapeProps;
 

@@ -46,6 +46,8 @@ export class Idle extends StateNode {
       y: currentPagePoint.y - center.dy,
     });
 
+    // this.parent.transition("select");
+
     //   override onPointerDown = () => {
     //     this.parent.transition("pointing", { shapeId: this.shapeId });
     //   };
