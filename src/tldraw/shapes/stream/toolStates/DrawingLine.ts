@@ -142,12 +142,22 @@ export class DrawingLine extends StateNode {
       .rot(-initialPageRotation)
       .add(initialHandle);
 
-    if (shiftKey && initialAdjacentHandle && initialHandle.id !== "middle") {
-      const angle = Vec.Angle(initialAdjacentHandle, point);
-      const snappedAngle = snapAngle(angle, 24);
-      const angleDifference = snappedAngle - angle;
-      point = Vec.RotWith(point, initialAdjacentHandle, angleDifference);
+    // Snap to right angles
+    const deltaX = point.x - initialHandle.x;
+    const deltaY = point.y - initialHandle.y;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      point.y = initialHandle.y; // Horizontal line
+    } else {
+      point.x = initialHandle.x; // Vertical line
     }
+
+    // if (shiftKey && initialAdjacentHandle && initialHandle.id !== "middle") {
+    //   const angle = Vec.Angle(initialAdjacentHandle, point);
+    //   const snappedAngle = snapAngle(angle, 24);
+    //   const angleDifference = snappedAngle - angle;
+    //   point = Vec.RotWith(point, initialAdjacentHandle, angleDifference);
+    // }
 
     // Clear any existing snaps
     editor.snaps.clearIndicators();
